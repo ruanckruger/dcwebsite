@@ -1,0 +1,66 @@
+<div class="container">
+  <div [style]="{'background':gradient}"
+       (click)="addPoint($event)"
+       id="stopper"
+       #stopperEl>
+    <ng-container *ngIf="stopperInited">
+      <app-stopper-point (PercentageChange)="percentChange($event)"
+                         (SelectPoint)="changeCurStopper($event)"
+                         *ngFor="let point of stopper.points"
+                         #point
+                         [stopper]="stopper"
+                         [stopperPoint]="point"></app-stopper-point>
+    </ng-container>
+  </div>
+  <div class="gradient-info">
+    <div class="container">
+      <ejs-circulargauge style="width:140px; height:210px;"
+                         id="circular-container"
+                         enablePointerDrag=true>
+        <e-axes>
+          <e-axis [majorTicks]="majorTicks"
+                  [minorTicks]="minorTicks"
+                  [labelStyle]="labelStyle"
+                  minimum=0
+                  maximum=360
+                  startAngle=0
+                  endAngle=360>
+            <e-ranges>
+              <e-range start=0
+                       end=360
+                       startWidth=3
+                       endWidth=3
+                       color="#ccc">
+              </e-range>
+            </e-ranges>
+            <e-pointers>
+              <e-pointer type="Marker"
+                         markerShape="Triangle"
+                         radius="77%"
+                         value=90
+                         [markerHeight]="11"
+                         [markerWidth]="11"
+                         ></e-pointer>
+            </e-pointers>
+          </e-axis>
+        </e-axes>
+      </ejs-circulargauge>
+    </div>
+    <div class="input-group">
+      <label for=""></label>
+      <input type="number"
+             min="0"
+             max="359"
+             name="angle"
+             id="angle">
+    </div>
+  </div>
+  <div class="color-picker">
+    <input ejs-colorpicker
+           [showButtons]="false"
+           (change)="changeColor($event)"
+           [inline]="true"
+           type="color"
+           id="colorpicker" />
+  </div>
+</div>

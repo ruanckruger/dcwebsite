@@ -1,0 +1,7 @@
+<div class="point"
+     [cdkDragFreeDragPosition]="dragPosition"
+     (click)="selectPoint($event)"
+     (cdkDragMoved)="dragMoved($event)"
+     cdkDragLockAxis="x"
+     cdkDragBoundary="#stopper"
+     cdkDrag><span class="percentage">{{percentage}}</span></div>
