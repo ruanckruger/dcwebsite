@@ -1,5 +1,6 @@
 import { CdkDragDrop, CdkDragMove } from '@angular/cdk/drag-drop';
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { inputs } from '@syncfusion/ej2-angular-inputs/src/textbox/textbox.component';
 import { Observable } from 'rxjs';
 import { ColorComponent } from 'src/app/models/color-component.model';
 import { StopperPoint } from 'src/app/models/stopper-point.model';
@@ -33,7 +34,6 @@ export class StopperPointComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
     for (let propName in changes) {
       if (propName === 'stopper') {
         this.stopper = changes[propName].currentValue
@@ -52,6 +52,7 @@ export class StopperPointComponent implements OnInit, OnChanges {
       this._stopperPoint.color.g = parseInt(rgb[2]);
       this._stopperPoint.color.b = parseInt(rgb[3]);
       this._stopperPoint.color.alpha = parseFloat(alpha);
+      this._stopperPoint.color.rgba = rgba;
     }
   }
 
@@ -69,5 +70,4 @@ export class StopperPointComponent implements OnInit, OnChanges {
     this.percentage = Math.round((event.pointerPosition.x - this.stopper.offset) / this.stopper.width * 100);
     this.changePercentage();
   }
-
 }

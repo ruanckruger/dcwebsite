@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, OnChanges, OnInit, Output, SimpleChange, ViewChild, ViewChildren } from '@angular/core';
 import { ColorComponent } from 'src/app/models/color-component.model';
 import { StopperPoint } from 'src/app/models/stopper-point.model';
 import { Stopper } from 'src/app/models/stopper.model';
@@ -12,16 +12,22 @@ import { GradientService } from 'src/app/services/gradient/gradient.service';
 export class StopperComponent implements OnInit, AfterViewInit {
   @ViewChild('stopperEl') stopperEl: ElementRef;
   @ViewChildren('point') pointEls: Array<StopperPoint>;
+  @Output() UpdateGradient = new EventEmitter<string>();
   stopper: Stopper;
   stopperInited = false;
   curPoint: StopperPoint = <StopperPoint>{};
   curColor: string = "rgba(122,122,122,1)";
   gradient: string = "";
+  sliderGradient: string = "";
+  curGradientStyle = "linear-gradient";
+  gradientStyles: string[] = ["linear-gradient", "conic-gradient", "radial-gradient"];
   public majorTicks: Object;
   public minorTicks: Object;
   public labelStyle: Object;
+  public animation: Object;
+  public angle = 120;
 
-  constructor(private cdr: ChangeDetectorRef, private gradientService: GradientService) { }
+  constructor(private cdr: ChangeDetectorRef) { }
   ngOnInit(): void {
     this.stopper = <Stopper>{ points: [] };
     this.initPoints();
@@ -43,11 +49,17 @@ export class StopperComponent implements OnInit, AfterViewInit {
       height: 5,
       width: 1
 
-    }; 
-    this.labelStyle= {
+    };
+    this.labelStyle = {
       position: 'outside',
-      hiddenLabel: 'First'
-  };
+      hiddenLabel: 'First',
+      font: {
+        color: "transparent"
+      }
+    };
+    this.animation = {
+      enable: false
+    }
   }
 
   ngAfterViewInit() {
@@ -60,9 +72,9 @@ export class StopperComponent implements OnInit, AfterViewInit {
   initPoints() {
     this.stopper.points.push({
       color: {
-        r: 0,
-        g: 100,
-        b: 0,
+        r: 50,
+        g: 50,
+        b: 50,
         alpha: 1
       },
       offset: 10
@@ -101,22 +113,33 @@ export class StopperComponent implements OnInit, AfterViewInit {
 
   generateGradient() {
     this.stopper.points.sort((a, b) => a.percentage - b.percentage);
-    this.gradient = "linear-gradient(90deg, ";
+    if (this.curGradientStyle == "linear-gradient") {
+      this.gradient = `${this.curGradientStyle}(${this.angle}deg, `;
+    } else {
+      this.gradient = `${this.curGradientStyle}(`;
+    }
+    this.sliderGradient = `linear-gradient(${this.angle}deg, `;
+
     this.stopper.points.forEach((point, index) => {
       if (index != this.stopper.points.length - 1) {
         this.gradient += `${this.getPointColorAndPer(point)}, `;
+        this.sliderGradient += `${this.getPointColorAndPer(point)}, `;
       } else {
         this.gradient += this.getPointColorAndPer(point);
+        this.sliderGradient += this.getPointColorAndPer(point);
       }
     });
     this.gradient += ')';
+    this.sliderGradient += ')';
+    // console.log(this.gradient);
+
     this.cdr.detectChanges();
+    this.previeGradient();
   }
 
   addPoint(event) {
     let target = event.target;
     let offset = Math.round(event.clientX - target.offsetLeft) / target.offsetWidth * 100;
-    console.log(this.curColor);
 
     let newPoint = <StopperPoint>{
       color: this.getColorObject(this.curColor),
@@ -127,8 +150,6 @@ export class StopperComponent implements OnInit, AfterViewInit {
   }
 
   changeCurStopper(point) {
-    console.log(point);
-
     this.curPoint = point;
     this.curColor = this.getPointColor(this.curPoint);
     this.cdr.detectChanges();
@@ -192,7 +213,24 @@ export class StopperComponent implements OnInit, AfterViewInit {
   }
 
   previeGradient() {
-    this.gradientService.setGradient(this.gradient);
+    this.UpdateGradient.emit(this.gradient);
   }
 
+  checkGaugeChange(event) {
+    console.log(this.angle);
+    console.log(event);
+    this.generateGradient();
+  }
+
+  test2(event) {
+    console.log(event);
+    this.angle = Math.round(event.currentValue);
+    this.generateGradient();
+  }
+
+  setGradientStyle(index) {
+    this.curGradientStyle = this.gradientStyles[index];
+    console.log(this.curGradientStyle);
+    this.generateGradient();
+  }
 }

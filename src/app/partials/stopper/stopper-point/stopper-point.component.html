@@ -1,4 +1,5 @@
 <div class="point"
+     [style]="{'background':_stopperPoint.color.rgba}"
      [cdkDragFreeDragPosition]="dragPosition"
      (click)="selectPoint($event)"
      (cdkDragMoved)="dragMoved($event)"

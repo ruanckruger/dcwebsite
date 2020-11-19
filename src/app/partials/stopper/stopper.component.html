@@ -1,5 +1,5 @@
 <div class="container">
-  <div [style]="{'background':gradient}"
+  <div [style]="{'background':sliderGradient}"
        (click)="addPoint($event)"
        id="stopper"
        #stopperEl>
@@ -14,53 +14,82 @@
   </div>
   <div class="gradient-info">
     <div class="container">
-      <ejs-circulargauge style="width:140px; height:210px;"
-                         id="circular-container"
-                         enablePointerDrag=true>
-        <e-axes>
-          <e-axis [majorTicks]="majorTicks"
-                  [minorTicks]="minorTicks"
-                  [labelStyle]="labelStyle"
-                  minimum=0
-                  maximum=360
-                  startAngle=0
-                  endAngle=360>
-            <e-ranges>
-              <e-range start=0
-                       end=360
-                       startWidth=3
-                       endWidth=3
-                       color="#ccc">
-              </e-range>
-            </e-ranges>
-            <e-pointers>
-              <e-pointer type="Marker"
-                         markerShape="Triangle"
-                         radius="77%"
-                         value=90
-                         [markerHeight]="11"
-                         [markerWidth]="11"
-                         ></e-pointer>
-            </e-pointers>
-          </e-axis>
-        </e-axes>
-      </ejs-circulargauge>
+      <div class="row">
+        <div class="col-3">
+          
+          <div class="custom-control custom-radio"
+               *ngFor="let style of gradientStyles; let i = index">
+            <input class="custom-control-input"
+                   type="radio"
+                   name="animation"
+                   id="{{gradientStyles[i]}}"
+                   [checked]="curGradientStyle == gradientStyles[i]"
+                   (click)="setGradientStyle(i)">
+            <label class="custom-control-label"
+                   for="animation"
+                   (click)="setGradientStyle(i)">{{style}}</label>
+          </div>
+        </div>
+        <div class="col-3">
+          <h3>Gradient Angle</h3>
+          <div class="gauge-container">
+            <ejs-circulargauge style="width:175px; height:175px;"
+                               id="circular-container"
+                               enablePointerDrag=true
+                               (dragEnd)="test2($event)">
+              <e-axes>
+                <e-axis [majorTicks]="majorTicks"
+                        [minorTicks]="minorTicks"
+                        [labelStyle]="labelStyle"
+                        minimum=0
+                        maximum=360
+                        startAngle=0
+                        endAngle=360>
+                  <e-ranges>
+                    <e-range start=0
+                             end=360
+                             startWidth=3
+                             endWidth=3
+                             color="#ccc">
+                    </e-range>
+                  </e-ranges>
+                  <e-pointers>
+                    <e-pointer type="Marker"
+                               [animation]="animation"
+                               markerShape="Triangle"
+                               radius="77%"
+                               [value]="angle"
+                               [markerHeight]="11"
+                               [markerWidth]="11"></e-pointer>
+                  </e-pointers>
+                </e-axis>
+              </e-axes>
+            </ejs-circulargauge>
+
+            <input type="number"
+                   min="0"
+                   max="359"
+                   name="angle"
+                   id="angle"
+                   [(ngModel)]="angle"
+                   (change)="checkGaugeChange($event)">
+          </div>
+        </div>
+        <div class="col-6">
+          <h3>
+            Color Picker
+          </h3>
+          <div class="color-picker">
+            <input ejs-colorpicker
+                   [showButtons]="false"
+                   (change)="changeColor($event)"
+                   [inline]="true"
+                   type="color"
+                   [value]="rgba2hex(curColor)"
+                   id="colorpicker" />
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="input-group">
-      <label for=""></label>
-      <input type="number"
-             min="0"
-             max="359"
-             name="angle"
-             id="angle">
-    </div>
-  </div>
-  <div class="color-picker">
-    <input ejs-colorpicker
-           [showButtons]="false"
-           (change)="changeColor($event)"
-           [inline]="true"
-           type="color"
-           id="colorpicker" />
   </div>
 </div>

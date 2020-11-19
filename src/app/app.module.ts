@@ -12,13 +12,14 @@ import { StopperComponent } from './partials/stopper/stopper.component';
 import { StopperPointComponent } from './partials/stopper/stopper-point/stopper-point.component';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { DragDropModule  } from '@angular/cdk/drag-drop'
+import { DragDropModule } from '@angular/cdk/drag-drop'
 import { GradientService } from './services/gradient/gradient.service';
 import { ColorPickerModule } from '@syncfusion/ej2-angular-inputs';
 
 import { enableRipple } from '@syncfusion/ej2-base';
 import { AnimationComponent } from './partials/animation/animation.component';
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
+import { FormsModule } from '@angular/forms';
 enableRipple(true);
 
 @NgModule({
@@ -38,7 +39,8 @@ enableRipple(true);
     NgbModule,
     DragDropModule,
     ColorPickerModule,
-    CircularGaugeModule
+    CircularGaugeModule,
+    FormsModule
   ],
   providers: [GradientService],
   bootstrap: [AppComponent]

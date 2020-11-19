@@ -1,5 +1,56 @@
-<div id="preview">
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <div class="form-group">
+        <label for="">Width</label>
+        <input type="number"
+               class="form-control"
+               name="width"
+               id="width"
+               aria-describedby="helpId"
+               placeholder=""
+               [(ngModel)]="width">
+        <!-- <small id="helpId" class="form-text text-muted">Help text</small> -->
+      </div>
+      <div class="form-group">
+        <label for="">Height</label>
+        <input type="number"
+               class="form-control"
+               name="width"
+               id="width"
+               aria-describedby="helpId"
+               placeholder=""
+               [(ngModel)]="height">
+        <!-- <small id="helpId" class="form-text text-muted">Help text</small> -->
+      </div>
+      <div class="form-group">
+        <label for="">Border Radius</label>
+        <input type="number"
+               class="form-control"
+               name="width"
+               id="width"
+               aria-describedby="helpId"
+               placeholder=""
+               [(ngModel)]="radius">
+        <!-- <small id="helpId" class="form-text text-muted">Help text</small> -->
+      </div>
+    </div>
+    <div class="col">
+      <div id="preview">
+        <div class="border-container">
+          <div class="border"
+               [style]="{
+                'background': gradient, 
+                'border-radius':radius+'px',
+                'width':  width/5+'px',        
+                'height': height/5+'px'        
+            }"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
 
 </div>
-<app-stopper></app-stopper>
+<app-stopper (UpdateGradient)="PrevieGradient($event)"></app-stopper>
 <app-animation></app-animation>
