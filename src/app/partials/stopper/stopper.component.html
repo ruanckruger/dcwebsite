@@ -15,23 +15,23 @@
   <div class="gradient-info">
     <div class="container">
       <div class="row">
-        <div class="col-3">
-          
+        <div class="col-md-3">
+          <h3>Gradient Type</h3>
           <div class="custom-control custom-radio"
-               *ngFor="let style of gradientStyles; let i = index">
+               *ngFor="let style of gradientStyles">
             <input class="custom-control-input"
                    type="radio"
                    name="animation"
-                   id="{{gradientStyles[i]}}"
-                   [checked]="curGradientStyle == gradientStyles[i]"
-                   (click)="setGradientStyle(i)">
+                   id="{{style}}"
+                   [checked]="curGradientStyle == style"
+                   (click)="setGradientStyle(style)">
             <label class="custom-control-label"
                    for="animation"
-                   (click)="setGradientStyle(i)">{{style}}</label>
+                   (click)="setGradientStyle(style)">{{style}}</label>
           </div>
         </div>
-        <div class="col-3">
-          <h3>Gradient Angle</h3>
+        <div class="col-md-3">
+          <h3>Angle</h3>
           <div class="gauge-container">
             <ejs-circulargauge style="width:175px; height:175px;"
                                id="circular-container"
@@ -56,16 +56,17 @@
                   <e-pointers>
                     <e-pointer type="Marker"
                                [animation]="animation"
-                               markerShape="Triangle"
+                               color="white"
+                               [border]="{color: '#1695df', width: 2}"
+                               markerShape="Circle"
                                radius="77%"
                                [value]="angle"
-                               [markerHeight]="11"
-                               [markerWidth]="11"></e-pointer>
+                               [markerHeight]="9"
+                               [markerWidth]="9"></e-pointer>
                   </e-pointers>
                 </e-axis>
               </e-axes>
             </ejs-circulargauge>
-
             <input type="number"
                    min="0"
                    max="359"
@@ -75,7 +76,7 @@
                    (change)="checkGaugeChange($event)">
           </div>
         </div>
-        <div class="col-6">
+        <div class="col-md-6">
           <h3>
             Color Picker
           </h3>

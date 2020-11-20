@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, OnChanges, OnInit, Output, SimpleChange, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, OnChanges, OnInit, Output, SimpleChange, ViewChild, ViewChildren } from '@angular/core';
 import { ColorComponent } from 'src/app/models/color-component.model';
 import { StopperPoint } from 'src/app/models/stopper-point.model';
 import { Stopper } from 'src/app/models/stopper.model';
@@ -25,7 +25,7 @@ export class StopperComponent implements OnInit, AfterViewInit {
   public minorTicks: Object;
   public labelStyle: Object;
   public animation: Object;
-  public angle = 120;
+  public angle = 90;
 
   constructor(private cdr: ChangeDetectorRef) { }
   ngOnInit(): void {
@@ -82,9 +82,9 @@ export class StopperComponent implements OnInit, AfterViewInit {
 
     this.stopper.points.push({
       color: {
-        r: 255,
-        g: 255,
-        b: 255,
+        r: 210,
+        g: 210,
+        b: 210,
         alpha: 1
       },
       offset: 90
@@ -118,7 +118,7 @@ export class StopperComponent implements OnInit, AfterViewInit {
     } else {
       this.gradient = `${this.curGradientStyle}(`;
     }
-    this.sliderGradient = `linear-gradient(${this.angle}deg, `;
+    this.sliderGradient = `linear-gradient(90deg, `;
 
     this.stopper.points.forEach((point, index) => {
       if (index != this.stopper.points.length - 1) {
@@ -131,8 +131,6 @@ export class StopperComponent implements OnInit, AfterViewInit {
     });
     this.gradient += ')';
     this.sliderGradient += ')';
-    // console.log(this.gradient);
-
     this.cdr.detectChanges();
     this.previeGradient();
   }
@@ -217,20 +215,25 @@ export class StopperComponent implements OnInit, AfterViewInit {
   }
 
   checkGaugeChange(event) {
-    console.log(this.angle);
-    console.log(event);
     this.generateGradient();
   }
 
   test2(event) {
-    console.log(event);
     this.angle = Math.round(event.currentValue);
     this.generateGradient();
   }
 
-  setGradientStyle(index) {
-    this.curGradientStyle = this.gradientStyles[index];
-    console.log(this.curGradientStyle);
+  setGradientStyle(style) {
+    this.curGradientStyle = style;
     this.generateGradient();
+  }
+
+  @HostListener('document:keyup', ['$event'])
+  handleDeleteKeyboardEvent(event: KeyboardEvent) {
+    if (event.key === 'Delete') {
+      this.stopper.points.splice(this.stopper.points.findIndex(p => p == this.curPoint),1);
+      this.curPoint = this.stopper.points[0];
+      this.generateGradient();
+    }
   }
 }

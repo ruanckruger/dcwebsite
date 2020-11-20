@@ -1,6 +1,7 @@
 <div class="container">
   <div class="row">
-    <div class="col">
+    <div class="col-md-5">
+      <h3>Your webcam size</h3>
       <div class="form-group">
         <label for="">Width</label>
         <input type="number"
@@ -8,9 +9,8 @@
                name="width"
                id="width"
                aria-describedby="helpId"
-               placeholder=""
+               (change)="calculateSize()"
                [(ngModel)]="width">
-        <!-- <small id="helpId" class="form-text text-muted">Help text</small> -->
       </div>
       <div class="form-group">
         <label for="">Height</label>
@@ -18,10 +18,10 @@
                class="form-control"
                name="width"
                id="width"
+               (change)="calculateSize()"
                aria-describedby="helpId"
                placeholder=""
                [(ngModel)]="height">
-        <!-- <small id="helpId" class="form-text text-muted">Help text</small> -->
       </div>
       <div class="form-group">
         <label for="">Border Radius</label>
@@ -35,22 +35,34 @@
         <!-- <small id="helpId" class="form-text text-muted">Help text</small> -->
       </div>
     </div>
-    <div class="col">
+    <div class="col-md-7">
       <div id="preview">
-        <div class="border-container">
+        <h3>Preview</h3>
+        <div class="border-container"
+             [style]="{'border-radius':radius+'px',
+             'animation': outerAnim,
+            'width':  width/4+'px',        
+            'height': height/4+'px'}">
           <div class="border"
-               [style]="{
-                'background': gradient, 
-                'border-radius':radius+'px',
-                'width':  width/5+'px',        
-                'height': height/5+'px'        
-            }"></div>
+               [style]="{ 'background': gradient,
+               'animation': innerAnim,
+               'width':  inWidth/4+'px',        
+               'height': inWidth/4+'px' }"></div>
+        </div>
+        <div class="form-group">
+          <label for="url"
+                 (click)="copyToClipboard()">Browsersource Url (click to copy)</label>
+          <input id="url"
+                 name="url"
+                 type="text"
+                 class="form-control"
+                 disabled
+                 [value]="url"
+                 (select)="copyToClipboard()">
         </div>
       </div>
-
     </div>
   </div>
-
+  <app-animation (UpdateAnimation)="PreviewAnim($event)"></app-animation>
 </div>
-<app-stopper (UpdateGradient)="PrevieGradient($event)"></app-stopper>
-<app-animation></app-animation>
+<app-stopper (UpdateGradient)="PreviewGradient($event)"></app-stopper>

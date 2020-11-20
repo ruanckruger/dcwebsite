@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-view-border',
@@ -6,10 +7,22 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./view-border.component.scss']
 })
 export class ViewBorderComponent implements OnInit {
-
-  constructor() { }
+  radius = "";
+  gradient = "";
+  innerAnim = "";
+  outerAnim = "";
+  constructor(private route: ActivatedRoute, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
+    console.log('Called Constructor');
+    this.route.queryParams.subscribe(params => {
+      console.log(params);
+      this.radius = params.radius;
+      this.gradient = params.gradient;
+      this.innerAnim = params.innerAnim;
+      this.outerAnim = params.outerAnim;
+    });
+
   }
 
 }

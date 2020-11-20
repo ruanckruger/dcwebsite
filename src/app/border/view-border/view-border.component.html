@@ -1,1 +1,9 @@
-<p>view-border works!</p>
+<div class="overall-container">
+    <div class="border-container"
+         [style]="{'border-radius':radius+'px',
+            'animation': outerAnim}">
+      <div class="border"
+           [style]="{ 'background': gradient,
+              'animation': innerAnim}"></div>
+    </div>
+</div>

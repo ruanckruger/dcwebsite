@@ -1,0 +1,40 @@
+$navHeight: 70px;
+
+#dc-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: $navHeight;
+  background-color: white;
+  box-shadow: 0px 2px 7px grey;
+
+  .container {
+    height: 100%;
+    position: relative;
+  }
+
+  .nav-logo {
+    height: 100%;
+
+    img {
+      height: 84%;
+      margin-left: 21px;
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
+  .nav-links {
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translate(-100%, -50%);
+    width: 210px;
+
+    .nav-link {
+      display: block;
+    }
+  }
+}

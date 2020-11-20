@@ -20,6 +20,9 @@ import { enableRipple } from '@syncfusion/ej2-base';
 import { AnimationComponent } from './partials/animation/animation.component';
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { FormsModule } from '@angular/forms';
+import { NavComponent } from './partials/nav/nav.component';
+import { PromoComponent } from './partials/promo/promo.component';
+import { HomeComponent } from './home/home.component';
 enableRipple(true);
 
 @NgModule({
@@ -31,7 +34,10 @@ enableRipple(true);
     ViewBorderComponent,
     StopperComponent,
     StopperPointComponent,
-    AnimationComponent
+    AnimationComponent,
+    NavComponent,
+    PromoComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
