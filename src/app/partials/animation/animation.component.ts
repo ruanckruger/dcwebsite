@@ -18,6 +18,7 @@ export class AnimationComponent implements OnInit {
   spinObj = <AnimationObj>{ name: 'spin', timing: 'linear', duration: 7000, delay: 0 }
   blurObj = <AnimationObj>{ name: 'blur', timing: 'linear', duration: 3000, delay: 0 }
   pulseObj = <AnimationObj>{ name: 'pulse', timing: 'linear', duration: 4000, delay: 0 }
+  hueObj = <AnimationObj>{ name: 'hue', timing: 'linear', duration: 4000, delay: 0 }
   // spinObj = <AnimationObj>{ name: 'spin', timing: 'linear', duration: 1000, delay: 0 }
 
   animObs: AnimationObj[];
@@ -32,6 +33,7 @@ export class AnimationComponent implements OnInit {
     this.animObs.push(this.spinObj);
     this.animObs.push(this.blurObj);
     this.animObs.push(this.pulseObj);
+    this.animObs.push(this.hueObj);
   }
 
   addAnimation(anim: string) {
@@ -54,6 +56,9 @@ export class AnimationComponent implements OnInit {
       }
       if (anim == "pulse") {
         this.animationStrings.push(this.animObjToStr(this.pulseObj));
+      }
+      if (anim == "hue") {
+        this.animationStrings.push(this.animObjToStr(this.hueObj));
       }
     });
     this.UpdateAnimation.emit(this.animationStrings);

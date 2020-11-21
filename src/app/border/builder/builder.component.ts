@@ -66,6 +66,12 @@ export class BuilderComponent implements OnInit {
         else
           this.outerAnim += ',' + anim;
       }
+      if (anim.indexOf("hue") >= 0) {
+        if (this.outerAnim == "")
+          this.innerAnim = anim;
+        else
+          this.innerAnim += ',' + anim;
+      }
     });
     this.generateUrl();
     this.calculateSize();

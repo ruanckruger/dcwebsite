@@ -1,9 +1,10 @@
 <app-nav></app-nav>
 <div class="container">
   <div id="how-to-use"
+       class="nue"
        [class.hidden]="!infoVisible">
     <h3>How to use the Border Builder</h3>
-    <p>Use the inputs under the "Your webcam settings" to set the resoultion
+    <p>Use the inputs under the "Scene settings" to set the resolution
       to the size of your webcam or scene for that matter, this is strictly for preview purposes, I recommend just
       keeping the aspect
       ratio.
@@ -22,50 +23,60 @@
     <button (click)="hideInfo()"
             class="btn btn-info">Hide this help</button>
   </div>
-  <div class="row">
-    <div class="col-md-5">
-      <h3>Your webcam size</h3>
-      <div class="form-group">
-        <label for="">Width</label>
-        <input type="number"
-               class="form-control"
-               name="width"
-               id="width"
-               aria-describedby="helpId"
-               (change)="calculateSize()"
-               [(ngModel)]="width">
+</div>
+<div class="container">
+  <div class="row nue">
+    <div class="col-md-5 scroll-settings">
+      <div class="settings">
+        <h3>Scene size</h3>
+        <div class="row">
+          <div class="col-6 form-group">
+            <label for="">Width</label>
+            <input type="number"
+                   class="form-control"
+                   name="width"
+                   id="width"
+                   aria-describedby="helpId"
+                   (change)="calculateSize()"
+                   [(ngModel)]="width">
+          </div>
+          <div class="col-6 form-group">
+            <label for="">Height</label>
+            <input type="number"
+                   class="form-control"
+                   name="width"
+                   id="width"
+                   (change)="calculateSize()"
+                   aria-describedby="helpId"
+                   placeholder=""
+                   [(ngModel)]="height">
+          </div>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="">Height</label>
-        <input type="number"
-               class="form-control"
-               name="width"
-               id="width"
-               (change)="calculateSize()"
-               aria-describedby="helpId"
-               placeholder=""
-               [(ngModel)]="height">
+      <div class="effects">
+        <h3>Effects</h3>
+        <div class="row">
+          <div class="form-group col-6">
+            <label for="">Border Radius</label>
+            <input type="number"
+                   class="form-control"
+                   name="radius"
+                   id="radius"
+                   placeholder=""
+                   [(ngModel)]="radius">
+          </div>
+          <div class="form-group col-6">
+            <label for="">Blur</label>
+            <input type="number"
+                   class="form-control"
+                   name="bluref"
+                   id="bluref"
+                   placeholder=""
+                   [(ngModel)]="blur">
+          </div>
+        </div>
       </div>
-
-      <h3>Effects</h3>
-      <div class="form-group">
-        <label for="">Border Radius</label>
-        <input type="number"
-               class="form-control"
-               name="radius"
-               id="radius"
-               placeholder=""
-               [(ngModel)]="radius">
-      </div>
-      <div>
-        <label for="">Blur</label>
-        <input type="number"
-               class="form-control"
-               name="bluref"
-               id="bluref"
-               placeholder=""
-               [(ngModel)]="blur">
-      </div>
+      <app-animation (UpdateAnimation)="PreviewAnim($event)"></app-animation>
     </div>
     <div class="col-md-7">
       <div id="preview">
@@ -93,7 +104,7 @@
                'height': inHeight/4+'px' }">
           </div>
         </div>
-        <div class="form-group">
+        <div class="form-group url">
           <label for="url"
                  (click)="copyToClipboard()">Browsersource Url (click to copy)</label>
           <input id="url"
@@ -107,7 +118,6 @@
       </div>
     </div>
   </div>
-  <app-animation (UpdateAnimation)="PreviewAnim($event)"></app-animation>
 </div>
 <app-stopper [midpoint]="midpoint"
              (UpdateGradient)="PreviewGradient($event)"></app-stopper>
