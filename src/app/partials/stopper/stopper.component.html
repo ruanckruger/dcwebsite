@@ -30,7 +30,8 @@
                    (click)="setGradientStyle(style)">{{style}}</label>
           </div>
         </div>
-        <div class="col-md-3">
+        <div *ngIf="curGradientStyle == 'linear-gradient'"
+             class="col-md-3">
           <h3>Angle</h3>
           <div class="gauge-container">
             <ejs-circulargauge style="width:175px; height:175px;"

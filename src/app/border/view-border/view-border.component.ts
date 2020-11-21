@@ -9,6 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 export class ViewBorderComponent implements OnInit {
   radius = "";
   gradient = "";
+  blur = "";
   innerAnim = "";
   outerAnim = "";
   constructor(private route: ActivatedRoute, private cdr: ChangeDetectorRef) { }
@@ -21,6 +22,7 @@ export class ViewBorderComponent implements OnInit {
       this.gradient = params.gradient;
       this.innerAnim = params.innerAnim;
       this.outerAnim = params.outerAnim;
+      this.blur = params.blur ? params.blur : 0;
     });
 
   }

@@ -1,0 +1,150 @@
+#splash-logo {
+  text-align: center;
+  position: relative;
+  width: 63vmin;
+  height: 63vmin;
+  margin: 0 auto;
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+
+  #inner-logo {
+    transform: scale(0.98);
+    position: relative;
+    z-index: 3;
+  }
+
+  .outer-logo {
+    transform: scale(0.98);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    animation: blurer 7s linear alternate infinite;
+    filter: blur(11px);
+    opacity: 0.35;
+  }
+
+  .outer-ring {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    animation: rotate 11s linear infinite;
+    filter: blur(11px);
+
+    &.top {
+      z-index: 2;
+      filter: none;
+      animation: rotate 10s linear infinite;
+    }
+  }
+}
+
+#welcome {
+  text-align: center;
+
+  .title {
+    font-size: 21px;
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.btn {
+  color: white;
+  font-size: 21px;
+  width: 280px;
+  height: 56px;
+  position: relative;
+  padding: 0;
+  margin-top: 14px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.3;
+    background-image: linear-gradient(35deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0));
+    transition: opacity 0.3s ease;
+  }
+
+  &:hover {
+
+    &::before {
+      opacity: 1;
+    }
+
+    .social-name {
+      transform: translateY(-200%);
+    }
+
+    .social-handle {
+      transform: translateY(-50%);
+    }
+  }
+
+  span {
+    position: absolute;
+    right: 21px;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: transform 0.2s ease-in-out;
+    width: 70%;
+    text-align: center;
+    display: inline-block;
+
+    &.social-handle {
+      transform: translateY(150%);
+    }
+
+    &.social-name {}
+  }
+
+  img {
+    position: absolute;
+    left: 21px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 35px;
+  }
+}
+
+.yt {
+  background-color: #FF0000;
+
+  .social-handle {
+    text-align: right;
+  }
+}
+
+.twitter {
+  background-color: #1da1f2;
+}
+
+.twitch {
+  background-color: #6441A4;
+}
+
+@keyframes blurer {
+  from {
+    filter: blur(3px)
+  }
+
+  to {
+    filter: blur(7px)
+  }
+}

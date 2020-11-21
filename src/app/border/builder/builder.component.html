@@ -1,4 +1,24 @@
+<app-nav></app-nav>
 <div class="container">
+  <div id="how-to-use"
+       [class.hidden]="!infoVisible">
+    <h3>How to use the Border Builder</h3>
+    <p>Use the inputs under the "Your webcam settings" to set the resoultion
+      to the size of your webcam or scene for that matter, this is strictly for preview purposes, I recommend just keeping the aspect
+      ratio.
+    </p>
+    <p>Use the Border effects section to adjust the static look of the border.</p>
+    <p>Simply create your gradient by adding stop points and choosing their colors. Also choose the gradient type.
+    </p>
+    <p>Use the animation section to bring your background to life.</p>
+    <p>I encourage you to play around with all the settings to get a really unique webcam. Enjoy!</p>
+    <p>When you're done, simply click the text that says click to copy to get the url to paste as a browser source url in obs! I recommend setting the width and height in obs's browser source settings to the same as the values you set up under the webcam settings section. That's it, you're done!</p>
+    <p><b>Please note:</b> this isn't strictly for webcam purposes, the border can be added to any scene your heart
+      desires. More functionality will be coming soon. Join <a href="https://discord.gg/mftyksJ"
+         target="_blank">my discord</a> for any questions or to leave some feedback or suggestions!</p>
+    <button (click)="hideInfo()"
+            class="btn btn-info">Hide this help</button>
+  </div>
   <div class="row">
     <div class="col-md-5">
       <h3>Your webcam size</h3>
@@ -23,16 +43,25 @@
                placeholder=""
                [(ngModel)]="height">
       </div>
+
+      <h3>Effects</h3>
       <div class="form-group">
         <label for="">Border Radius</label>
         <input type="number"
                class="form-control"
-               name="width"
-               id="width"
-               aria-describedby="helpId"
+               name="radius"
+               id="radius"
                placeholder=""
                [(ngModel)]="radius">
-        <!-- <small id="helpId" class="form-text text-muted">Help text</small> -->
+      </div>
+      <div>
+        <label for="">Blur</label>
+        <input type="number"
+               class="form-control"
+               name="bluref"
+               id="bluref"
+               placeholder=""
+               [(ngModel)]="blur">
       </div>
     </div>
     <div class="col-md-7">
@@ -40,9 +69,10 @@
         <h3>Preview</h3>
         <div class="border-container"
              [style]="{'border-radius':radius+'px',
-             'animation': outerAnim,
-            'width':  width/4+'px',        
-            'height': height/4+'px'}">
+              'filter':'blur('+blur+'px)',
+              'animation': outerAnim,
+              'width':  width/4+'px',        
+              'height': height/4+'px'}">
           <div class="border"
                [style]="{ 'background': gradient,
                'animation': innerAnim,

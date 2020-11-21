@@ -12,6 +12,8 @@ export class BuilderComponent implements OnInit {
   inWidth = 1920;
   inHeight = 1080;
   radius = 0;
+  infoVisible = true;
+  blur = 0;
   spinAnim = "spin 7s linear infinite";
   blurAnim = "blur 2s linear infinite";
   waveAnim = "";
@@ -64,6 +66,10 @@ export class BuilderComponent implements OnInit {
     this.inWidth = Math.ceil(Math.sqrt(Math.pow(this.width, 2) + Math.pow(this.height, 2))) + 100;
   }
 
+  hideInfo() {
+    this.infoVisible = false;
+  }
+
   generateUrl() {
     this.url = "http://daddycoolgaming.co.za/border?";
     this.url += "gradient=" + encodeURIComponent(this.gradient);
@@ -72,6 +78,7 @@ export class BuilderComponent implements OnInit {
     if (this.outerAnim != "")
       this.url += '&outerAnim=' + encodeURIComponent(this.outerAnim);
     this.url += '&radius=' + this.radius;
+    this.url += '&blur=' + this.blur;
   }
   serialize(obj) {
     var str = [];
