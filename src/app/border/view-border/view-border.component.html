@@ -1,11 +1,15 @@
 <div class="overall-container">
   <div class="border-container"
+       #outer
        [style]="{
             'border-radius':radius+'px',
             'filter':'blur('+blur+'px)',
             'animation': outerAnim}">
     <div class="border"
          [style]="{ 'background': gradient,
-              'animation': innerAnim}"></div>
+              'animation': innerAnim,
+              'width':  inWidth+'px',        
+              'height': inHeight+'px'}">
+    </div>
   </div>
 </div>

@@ -5,4 +5,6 @@
      (cdkDragMoved)="dragMoved($event)"
      cdkDragLockAxis="x"
      cdkDragBoundary="#stopper"
-     cdkDrag><span class="percentage">{{percentage}}</span></div>
+     cdkDrag><span (click)="removePoint($event)"
+        class="remove"><img src="../../../../assets/delete.svg"
+         alt=""></span></div>

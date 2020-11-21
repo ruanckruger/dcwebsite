@@ -7,11 +7,28 @@
   left: 0;
   top: 0px;
   border-radius: 3px;
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
 
   .percentage {
     position: absolute;
     top: 105%;
     left: 50%;
     transform: translateX(-50%);
+  }
+
+  .remove {
+    position: absolute;
+    bottom: 105%;
+    left: 75%;
+    transform: translateX(-50%);
+    cursor: pointer;
+
+    img {
+      width: 13px;
+    }
   }
 }

@@ -1,5 +1,6 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, OnChanges, OnInit, Output, SimpleChange, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { ColorComponent } from 'src/app/models/color-component.model';
+import { Midpoint } from 'src/app/models/midpoint.model';
 import { StopperPoint } from 'src/app/models/stopper-point.model';
 import { Stopper } from 'src/app/models/stopper.model';
 import { GradientService } from 'src/app/services/gradient/gradient.service';
@@ -9,13 +10,15 @@ import { GradientService } from 'src/app/services/gradient/gradient.service';
   templateUrl: './stopper.component.html',
   styleUrls: ['./stopper.component.scss']
 })
-export class StopperComponent implements OnInit, AfterViewInit {
+export class StopperComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('stopperEl') stopperEl: ElementRef;
   @ViewChildren('point') pointEls: Array<StopperPoint>;
   @Output() UpdateGradient = new EventEmitter<string>();
-  stopper: Stopper;
+  @Input('midpoint') midpoint: Midpoint;
+
+  stopper: Stopper = <Stopper>{ points: [] };
   stopperInited = false;
-  curPoint: StopperPoint = <StopperPoint>{};
+  curPoint: StopperPoint;
   curColor: string = "rgba(122,122,122,1)";
   gradient: string = "";
   sliderGradient: string = "";
@@ -29,11 +32,16 @@ export class StopperComponent implements OnInit, AfterViewInit {
 
   constructor(private cdr: ChangeDetectorRef) { }
   ngOnInit(): void {
-    this.stopper = <Stopper>{ points: [] };
     this.initPoints();
     this.gradient = "";
     this.curColor = "rgba(122,122,122,1)";
     this.setupAngle();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    // console.log(changes);
+    this.cdr.detectChanges();
+    this.generateGradient();
   }
 
   setupAngle() {
@@ -63,6 +71,16 @@ export class StopperComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.setStopperWidth();
+    this.generateGradient();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.setStopperWidth();
+  }
+
+  setStopperWidth() {
     this.stopper.width = this.stopperEl.nativeElement.offsetWidth;
     this.stopper.offset = this.stopperEl.nativeElement.offsetLeft;
     this.stopperInited = true;
@@ -104,7 +122,6 @@ export class StopperComponent implements OnInit, AfterViewInit {
     this.cdr.detectChanges();
     this.stopper.points.splice(this.stopper.points.findIndex(p => p == this.curPoint), 1);
     this.stopper.points.push(this.curPoint);
-    // this.stopper.points.find(p => p == this.curPoint).color.rgba = event.currentValue.rgba;
     this.cdr.detectChanges();
     this.curColor = event.currentValue.rgba;
 
@@ -115,9 +132,12 @@ export class StopperComponent implements OnInit, AfterViewInit {
     this.stopper.points.sort((a, b) => a.percentage - b.percentage);
     if (this.curGradientStyle == "linear-gradient") {
       this.gradient = `${this.curGradientStyle}(${this.angle}deg, `;
+    } else if (this.curGradientStyle == "radial-gradient") {
+      this.gradient = `${this.curGradientStyle}(circle at ${this.midpoint.x}% ${this.midpoint.y}%, `;
     } else {
       this.gradient = `${this.curGradientStyle}(`;
     }
+
     this.sliderGradient = `linear-gradient(90deg, `;
 
     this.stopper.points.forEach((point, index) => {
@@ -190,7 +210,6 @@ export class StopperComponent implements OnInit, AfterViewInit {
     } else {
       a = 1;
     }
-    // multiply before convert to HEX
     a = ((a * 255) | 1 << 8).toString(16).slice(1)
     hex = hex + a;
 
@@ -231,9 +250,15 @@ export class StopperComponent implements OnInit, AfterViewInit {
   @HostListener('document:keyup', ['$event'])
   handleDeleteKeyboardEvent(event: KeyboardEvent) {
     if (event.key === 'Delete') {
-      this.stopper.points.splice(this.stopper.points.findIndex(p => p == this.curPoint),1);
-      this.curPoint = this.stopper.points[0];
-      this.generateGradient();
+      if (this.curPoint != undefined) {
+        this.stopper.points.splice(this.stopper.points.findIndex(p => p == this.curPoint), 1);
+        this.curPoint = undefined;
+        this.generateGradient();
+      }
     }
+  }
+
+  removePoint(event: StopperPoint) {
+    this.handleDeleteKeyboardEvent(<KeyboardEvent>{ key: "Delete" })
   }
 }

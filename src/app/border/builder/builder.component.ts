@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Midpoint } from 'src/app/models/midpoint.model';
 
 @Component({
   selector: 'app-builder',
@@ -6,7 +7,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
   styleUrls: ['./builder.component.scss']
 })
 export class BuilderComponent implements OnInit {
-  gradient: string;
+  gradient: string = "";
   width = 1920;
   height = 1080;
   inWidth = 1920;
@@ -19,8 +20,13 @@ export class BuilderComponent implements OnInit {
   waveAnim = "";
   pulseAnim = "";
 
+  midpoint: Midpoint = { x: 50, y: 50 };
+
   outerAnim = "";
   innerAnim = "";
+
+  @ViewChild("outerBorder", { static: false }) outerBorder: ElementRef;
+  @ViewChild("circleCenter", { static: false }) circleCenter: HTMLElement;
 
   url: string = "http://daddycoolgaming.co.za/border?";
   constructor(private cdr: ChangeDetectorRef) { }
@@ -30,6 +36,7 @@ export class BuilderComponent implements OnInit {
   }
 
   PreviewGradient(gradient) {
+    this.calculateSize();
     this.gradient = gradient;
     this.generateUrl();
     this.cdr.detectChanges();
@@ -38,6 +45,8 @@ export class BuilderComponent implements OnInit {
   PreviewAnim(anims: string[]) {
     this.innerAnim = "";
     this.outerAnim = "";
+    console.log("test");
+
     anims.forEach(anim => {
       if (anim.indexOf("spin") >= 0) {
         if (this.innerAnim == "")
@@ -59,11 +68,20 @@ export class BuilderComponent implements OnInit {
       }
     });
     this.generateUrl();
+    this.calculateSize();
     this.cdr.detectChanges();
   }
 
   calculateSize() {
-    this.inWidth = Math.ceil(Math.sqrt(Math.pow(this.width, 2) + Math.pow(this.height, 2))) + 100;
+    if (this.innerAnim.indexOf('spin') >= 0) {
+      this.inWidth = Math.ceil(Math.sqrt(Math.pow(this.width, 2) + Math.pow(this.height, 2))) + 100;
+      this.inHeight = this.inWidth;
+    } else {
+      this.inWidth = this.width;
+      this.inHeight = this.height;
+    }
+
+    this.cdr.detectChanges();
   }
 
   hideInfo() {
@@ -80,6 +98,7 @@ export class BuilderComponent implements OnInit {
     this.url += '&radius=' + this.radius;
     this.url += '&blur=' + this.blur;
   }
+
   serialize(obj) {
     var str = [];
     for (var p in obj)
@@ -89,9 +108,22 @@ export class BuilderComponent implements OnInit {
     return str.join("&");
   }
 
+  moveCenter(event) {
+
+    let boundingRect = this.outerBorder.nativeElement.getBoundingClientRect();
+    console.log(event);
+    console.log(boundingRect);
+    this.midpoint = {
+      x: Math.round((event.pointerPosition.x - boundingRect.left) / boundingRect.width * 100),
+      y: Math.round((event.pointerPosition.y - boundingRect.top) / boundingRect.height * 100)
+    };
+    console.log(this.midpoint);
+
+  }
+
   copyToClipboard() {
     this.copyTextToClipboard(this.url);
-    alert("Copied to clipboard");
+    alert("URL copied to clipboard");
   }
 
   fallbackCopyTextToClipboard(text) {
@@ -103,7 +135,7 @@ export class BuilderComponent implements OnInit {
     try {
       var successful = document.execCommand('copy');
       var msg = successful ? 'successful' : 'unsuccessful';
-      console.log('Fallback: Copying text command was ' + msg);
+      // console.log('Fallback: Copying text command was ' + msg);
     } catch (err) {
       console.error('Fallback: Oops, unable to copy', err);
     }
@@ -115,7 +147,7 @@ export class BuilderComponent implements OnInit {
       return;
     }
     navigator.clipboard.writeText(text).then(function () {
-      console.log('Async: Copying to clipboard was successful!');
+      // console.log('Async: Copying to clipboard was successful!');
     }, function (err) {
       console.error('Async: Could not copy text: ', err);
     });

@@ -14,8 +14,10 @@ import { GradientService } from 'src/app/services/gradient/gradient.service';
 })
 export class StopperPointComponent implements OnInit, OnChanges {
   _stopperPoint: StopperPoint;
+  // midpoint: Object;
   @Output() PercentageChange = new EventEmitter<Stopper>();
   @Output() SelectPoint = new EventEmitter<StopperPoint>();
+  @Output() RemovePoint = new EventEmitter<StopperPoint>();
   @Input('stopperPoint')
   set stopperPoint(stopperPoint: StopperPoint) {
     this._stopperPoint = stopperPoint;
@@ -69,5 +71,15 @@ export class StopperPointComponent implements OnInit, OnChanges {
   dragMoved(event) {
     this.percentage = Math.round((event.pointerPosition.x - this.stopper.offset) / this.stopper.width * 100);
     this.changePercentage();
+  }
+
+  removePoint(e) {
+    e.stopPropagation();
+    this.SelectPoint.emit(this._stopperPoint);
+    // this.stopper.points.filter(p => p.percentage != this._stopperPoint.percentage);
+    this.RemovePoint.emit(this._stopperPoint);
+    // this.PercentageChange.emit(this.stopper);
+    // this._stopperPoint = undefined;
+
   }
 }

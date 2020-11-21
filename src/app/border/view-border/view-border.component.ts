@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -6,25 +6,50 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './view-border.component.html',
   styleUrls: ['./view-border.component.scss']
 })
-export class ViewBorderComponent implements OnInit {
+export class ViewBorderComponent implements OnInit, AfterViewInit {
+  @ViewChild("outer", { static: false }) outer: ElementRef;
   radius = "";
   gradient = "";
   blur = "";
   innerAnim = "";
   outerAnim = "";
+  inWidth = 0;
+  inHeight = 0;
+  width = 0;
+  height = 0;
   constructor(private route: ActivatedRoute, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    console.log('Called Constructor');
+    // console.log('Called Constructor');
     this.route.queryParams.subscribe(params => {
       console.log(params);
-      this.radius = params.radius;
-      this.gradient = params.gradient;
-      this.innerAnim = params.innerAnim;
-      this.outerAnim = params.outerAnim;
+
+      this.radius = params.radius ? params.radius : 0;
+      this.gradient = params.gradient ? params.gradient : "";
+      this.innerAnim = params.innerAnim ? params.innerAnim : "";
+      this.outerAnim = params.outerAnim ? params.outerAnim : "";
       this.blur = params.blur ? params.blur : 0;
     });
-
+    this.cdr.detectChanges();
   }
 
+  ngAfterViewInit() {
+    this.calculateSize();
+  }
+
+  calculateSize() {
+    this.width = this.outer.nativeElement.offsetWidth;
+    this.height = this.outer.nativeElement.offsetHeight;;
+    console.log(this.width);
+    console.log(this.height);
+
+    if (this.innerAnim.indexOf('spin') >= 0) {
+      this.inWidth = Math.ceil(Math.sqrt(Math.pow(this.width, 2) + Math.pow(this.height, 2))) + 100;
+      this.inHeight = this.inWidth;
+    } else {
+      this.inWidth = this.width;
+      this.inHeight = this.height;
+    }
+    this.cdr.detectChanges();
+  }
 }
