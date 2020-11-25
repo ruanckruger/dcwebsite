@@ -1,8 +1,10 @@
-<div id="animations">
+<div id="animations"
+     class="container"
+     [class.hidden]="visible">
   <h3>Animations</h3>
-  <div>
+  <div class="row">
     <ng-container *ngFor="let animation of animObs">
-      <div class="custom-control custom-checkbox">
+      <div class="custom-control custom-checkbox col">
         <input class="custom-control-input"
                type="checkbox"
                name="animation"

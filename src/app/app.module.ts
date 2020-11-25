@@ -23,6 +23,7 @@ import { FormsModule } from '@angular/forms';
 import { NavComponent } from './partials/nav/nav.component';
 import { PromoComponent } from './partials/promo/promo.component';
 import { HomeComponent } from './home/home.component';
+import { HowToComponent } from './border/how-to/how-to.component';
 enableRipple(true);
 
 @NgModule({
@@ -37,7 +38,8 @@ enableRipple(true);
     AnimationComponent,
     NavComponent,
     PromoComponent,
-    HomeComponent
+    HomeComponent,
+    HowToComponent
   ],
   imports: [
     BrowserModule,

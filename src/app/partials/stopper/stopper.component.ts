@@ -14,21 +14,27 @@ export class StopperComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('stopperEl') stopperEl: ElementRef;
   @ViewChildren('point') pointEls: Array<StopperPoint>;
   @Output() UpdateGradient = new EventEmitter<string>();
+  @Output() UpdateStopper = new EventEmitter<Stopper>();
+  @Output() UpdateMidpoint = new EventEmitter<Midpoint>();
+  @Output() UpdateAngle = new EventEmitter<number>();
+  @Output() UpdateCurGradient = new EventEmitter<string>();
   @Input('midpoint') midpoint: Midpoint;
+  @Input('visible') visible: boolean;
+  @Input('stopper') stopper: Stopper;
+  @Input('angle') angle: number;
+  @Input('curGradientStyle') curGradientStyle: string;
 
-  stopper: Stopper = <Stopper>{ points: [] };
+
   stopperInited = false;
   curPoint: StopperPoint;
   curColor: string = "rgba(122,122,122,1)";
   gradient: string = "";
   sliderGradient: string = "";
-  curGradientStyle = "linear-gradient";
   gradientStyles: string[] = ["linear-gradient", "conic-gradient", "radial-gradient"];
   public majorTicks: Object;
   public minorTicks: Object;
   public labelStyle: Object;
   public animation: Object;
-  public angle = 90;
 
   constructor(private cdr: ChangeDetectorRef) { }
   ngOnInit(): void {
@@ -39,7 +45,6 @@ export class StopperComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    // console.log(changes);
     this.cdr.detectChanges();
     this.generateGradient();
   }
@@ -88,26 +93,6 @@ export class StopperComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   initPoints() {
-    this.stopper.points.push({
-      color: {
-        r: 50,
-        g: 50,
-        b: 50,
-        alpha: 1
-      },
-      offset: 10
-    });
-
-    this.stopper.points.push({
-      color: {
-        r: 210,
-        g: 210,
-        b: 210,
-        alpha: 1
-      },
-      offset: 90
-    });
-
     this.curPoint = this.stopper.points[0];
     this.curColor = this.getPointColor(this.curPoint);
   }
@@ -134,6 +119,8 @@ export class StopperComponent implements OnInit, AfterViewInit, OnChanges {
       this.gradient = `${this.curGradientStyle}(${this.angle}deg, `;
     } else if (this.curGradientStyle == "radial-gradient") {
       this.gradient = `${this.curGradientStyle}(circle at ${this.midpoint.x}% ${this.midpoint.y}%, `;
+    } else if (this.curGradientStyle == "conic-gradient") {
+      this.gradient = `${this.curGradientStyle}(from ${this.angle}deg at ${this.midpoint.x}% ${this.midpoint.y}%, `;
     } else {
       this.gradient = `${this.curGradientStyle}(`;
     }
@@ -230,6 +217,10 @@ export class StopperComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   previeGradient() {
+    this.UpdateAngle.emit(this.angle);
+    this.UpdateMidpoint.emit(this.midpoint);
+    this.UpdateCurGradient.emit(this.curGradientStyle);
+    this.UpdateStopper.emit(this.stopper);
     this.UpdateGradient.emit(this.gradient);
   }
 
@@ -237,7 +228,7 @@ export class StopperComponent implements OnInit, AfterViewInit, OnChanges {
     this.generateGradient();
   }
 
-  test2(event) {
+  changeAngle(event) {
     this.angle = Math.round(event.currentValue);
     this.generateGradient();
   }

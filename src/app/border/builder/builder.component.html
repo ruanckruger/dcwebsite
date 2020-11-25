@@ -1,34 +1,113 @@
 <app-nav></app-nav>
-<div class="container">
-  <div id="how-to-use"
-       class="nue"
-       [class.hidden]="!infoVisible">
-    <h3>How to use the Border Builder</h3>
-    <p>Use the inputs under the "Scene settings" to set the resolution
-      to the size of your webcam or scene for that matter, this is strictly for preview purposes, I recommend just
-      keeping the aspect
-      ratio.
-    </p>
-    <p>Use the Border effects section to adjust the static look of the border.</p>
-    <p>Simply create your gradient by adding stop points and choosing their colors. Also choose the gradient type.
-    </p>
-    <p>Use the animation section to bring your background to life.</p>
-    <p>I encourage you to play around with all the settings to get a really unique webcam. Enjoy!</p>
-    <p>When you're done, simply click the text that says click to copy to get the url to paste as a browser source url
-      in obs! I recommend setting the width and height in obs's browser source settings to the same as the values you
-      set up under the webcam settings section. That's it, you're done!</p>
-    <p><b>Please note:</b> this isn't strictly for webcam purposes, the border can be added to any scene your heart
-      desires. More functionality will be coming soon. Join <a href="https://discord.gg/mftyksJ"
-         target="_blank">my discord</a> for any questions or to leave some feedback or suggestions!</p>
-    <button (click)="hideInfo()"
-            class="btn btn-info">Hide this help</button>
+<app-how-to></app-how-to>
+<div class="container nue"
+     [style]="{'background-color':previewBg}"
+     id="preview-fixed">
+  <div class="row">
+    <div class="col-md-7">
+      <div id="preview">
+        <h3>Preview</h3>
+        <div class="preview-container"
+             id="preview-wrapper">
+          <div id="preview-image"
+               *ngIf="prevImg != ''"
+               [style]="{
+                  'background-image':'url('+prevImg+')',
+                  'width':imgSize+'%',
+                  'height':imgSize+'%',
+                  'border-radius':radius+'px',
+                  'display':previewVisible ? 'block':'none'}">
+          </div>
+          <div *ngIf="prevImg != ''"
+               class="hide-preview"
+               (click)="togglePreview()">
+            <img *ngIf="previewVisible"
+                 src="../../../assets/baseline_visibility_black_18dp.png">
+            <img *ngIf="!previewVisible"
+                 src="../../../assets/baseline_visibility_off_black_18dp.png">
+          </div>
+          <div *ngIf="(gradient.indexOf('radial')>=0 || gradient.indexOf('conic')>=0) && editMode=='gradient'"
+               #circleCenter
+               id="circle-center"
+               cdkDragBoundary="#preview-wrapper"
+               cdkDrag
+               (cdkDragMoved)="moveCenter($event)">
+            <div class="inner-circle"></div>
+          </div>
+          <div #outerBorder
+               id="outer-border"
+               class="border-container"
+               [style]="{'border-radius':radius+'px',
+                'opacity': opacity/100,
+                'filter':'blur('+blur+'px)',
+                'animation': outerAnim,
+                'width':  width/4+'px',        
+                'height': height/4+'px'}">
+
+            <div class="inner-border"
+                 [style]="{ 'background': gradient,
+                 'animation': innerAnim,
+                 'width':  inWidth/4+'px',        
+                 'height': inHeight/4+'px' }">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-5">
+      <div class="form-group url">
+        <label class="url-lable"
+               for="url"
+               (click)="copyToClipboard()">Browsersource Url (click to copy)</label>
+        <div (click)="copyToClipboard()"
+             class="input-container">
+          <input id="url"
+                 name="url"
+                 type="text"
+                 class="form-control"
+                 disabled
+                 [value]="url">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="mode-btn-container"
+       class="row">
+    <button [class.active-mode]="editMode == 'preview'"
+            class="btn col-md-3 mode-btn"
+            (click)="setEditMode('preview')">Preview Settings</button>
+    <button [class.active-mode]="editMode == 'static'"
+            class="btn col-md-3 mode-btn"
+            (click)="setEditMode('static')">Static Settings</button>
+    <button [class.active-mode]="editMode == 'gradient'"
+            class="btn col-md-3 mode-btn"
+            (click)="setEditMode('gradient')">Gradient Settings</button>
+    <button [class.active-mode]="editMode == 'animation'"
+            class="btn col-md-3 mode-btn"
+            (click)="setEditMode('animation')">Animation Settings</button>
   </div>
 </div>
-<div class="container">
-  <div class="row nue">
-    <div class="col-md-5 scroll-settings">
+<div id="preview-spacer"></div>
+<div id="mode-switch">
+  <app-stopper *ngIf="editMode == 'gradient'"
+               [stopper]="stopper"
+               [midpoint]="midpoint"
+               [angle]="angle"
+               [curGradientStyle]="curGradientStyle"
+               (UpdateCurGradient)="updateCurGradient($event)"
+               (UpdateAngle)="updateAngle($event)"
+               (UpdateMidpoint)="updateMidpoint($event)"
+               (UpdateStopper)="updateStopper($event)"
+               (UpdateGradient)="PreviewGradient($event)"></app-stopper>
+  <app-animation *ngIf="editMode == 'animation'"
+                 [animObs]="animObs"
+                 [activeAnimations]="activeAnimations"
+                 (UpdateActiveAnimation)="updateActiveAnims($event)"
+                 (UpdateAnimation)="PreviewAnim($event)"></app-animation>
+  <ng-container *ngIf="editMode=='preview'">
+    <div class="container">
       <div class="settings">
-        <h3>Scene size</h3>
+        <h3>Preview Settings</h3>
         <div class="row">
           <div class="col-6 form-group">
             <label for="">Width</label>
@@ -52,9 +131,43 @@
                    [(ngModel)]="height">
           </div>
         </div>
+        <div class="preview-settings">
+          <div class="row">
+            <div class="form-group col">
+              <label for="img-upload">Preview image</label>
+              <input id="img-upload"
+                     name="img-upload"
+                     type="file"
+                     class="form-control"
+                     (change)="previewImage($event)">
+            </div>
+            <div *ngIf="prevImg != ''"
+                 class="form-group col">
+              <label for="img-upload">Image size</label>
+              <input id="previewSize"
+                     name="previewSize"
+                     type="number"
+                     max="100"
+                     class="form-control"
+                     [(ngModel)]="imgSize">
+            </div>
+            <div class="form-group col">
+              <label for="previewBg">Background color</label>
+              <input id="previewBg"
+                     name="previewBg"
+                     type="color"
+                     class="form-control"
+                     [(ngModel)]="previewBg">
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="editMode=='static'">
+    <div class="container">
       <div class="effects">
-        <h3>Effects</h3>
+        <h3>Static styles</h3>
         <div class="row">
           <div class="form-group col-6">
             <label for="">Border Radius</label>
@@ -62,7 +175,7 @@
                    class="form-control"
                    name="radius"
                    id="radius"
-                   placeholder=""
+                   min="0"
                    [(ngModel)]="radius">
           </div>
           <div class="form-group col-6">
@@ -71,53 +184,21 @@
                    class="form-control"
                    name="bluref"
                    id="bluref"
-                   placeholder=""
+                   min="0"
                    [(ngModel)]="blur">
           </div>
-        </div>
-      </div>
-      <app-animation (UpdateAnimation)="PreviewAnim($event)"></app-animation>
-    </div>
-    <div class="col-md-7">
-      <div id="preview">
-        <h3>Preview</h3>
-        <div #outerBorder
-             id="outer-border"
-             class="border-container"
-             [style]="{'border-radius':radius+'px',
-              'filter':'blur('+blur+'px)',
-              'animation': outerAnim,
-              'width':  width/4+'px',        
-              'height': height/4+'px'}">
-          <div *ngIf="gradient.indexOf('radial')>=0"
-               #circleCenter
-               id="circle-center"
-               cdkDragBoundary="#outer-border"
-               cdkDrag
-               (cdkDragMoved)="moveCenter($event)">
-            <div class="inner-circle"></div>
+          <div class="form-group col-6">
+            <label for="">Opacity</label>
+            <input type="number"
+                   class="form-control"
+                   name="opacityref"
+                   id="opacityref"
+                   min="0"
+                   max="100"
+                   [(ngModel)]="opacity">
           </div>
-          <div class="border"
-               [style]="{ 'background': gradient,
-               'animation': innerAnim,
-               'width':  inWidth/4+'px',        
-               'height': inHeight/4+'px' }">
-          </div>
-        </div>
-        <div class="form-group url">
-          <label for="url"
-                 (click)="copyToClipboard()">Browsersource Url (click to copy)</label>
-          <input id="url"
-                 name="url"
-                 type="text"
-                 class="form-control"
-                 disabled
-                 [value]="url"
-                 (select)="copyToClipboard()">
         </div>
       </div>
     </div>
-  </div>
+  </ng-container>
 </div>
-<app-stopper [midpoint]="midpoint"
-             (UpdateGradient)="PreviewGradient($event)"></app-stopper>

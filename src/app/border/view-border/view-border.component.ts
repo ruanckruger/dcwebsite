@@ -11,8 +11,11 @@ export class ViewBorderComponent implements OnInit, AfterViewInit {
   radius = "";
   gradient = "";
   blur = "";
+  opacity = 1;
+
   innerAnim = "";
   outerAnim = "";
+
   inWidth = 0;
   inHeight = 0;
   width = 0;
@@ -20,15 +23,13 @@ export class ViewBorderComponent implements OnInit, AfterViewInit {
   constructor(private route: ActivatedRoute, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    // console.log('Called Constructor');
     this.route.queryParams.subscribe(params => {
-      console.log(params);
-
       this.radius = params.radius ? params.radius : 0;
       this.gradient = params.gradient ? params.gradient : "";
       this.innerAnim = params.innerAnim ? params.innerAnim : "";
       this.outerAnim = params.outerAnim ? params.outerAnim : "";
       this.blur = params.blur ? params.blur : 0;
+      this.opacity = params.opacity ? params.opacity : 1;
     });
     this.cdr.detectChanges();
   }
@@ -39,10 +40,7 @@ export class ViewBorderComponent implements OnInit, AfterViewInit {
 
   calculateSize() {
     this.width = this.outer.nativeElement.offsetWidth;
-    this.height = this.outer.nativeElement.offsetHeight;;
-    console.log(this.width);
-    console.log(this.height);
-
+    this.height = this.outer.nativeElement.offsetHeight;
     if (this.innerAnim.indexOf('spin') >= 0) {
       this.inWidth = Math.ceil(Math.sqrt(Math.pow(this.width, 2) + Math.pow(this.height, 2))) + 100;
       this.inHeight = this.inWidth;

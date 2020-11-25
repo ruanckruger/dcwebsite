@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnChanges, OnInit, Output, SimpleChange } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange } from '@angular/core';
 import { AnimationObj } from 'src/app/models/animation.model';
 
 @Component({
@@ -7,34 +7,19 @@ import { AnimationObj } from 'src/app/models/animation.model';
   styleUrls: ['./animation.component.scss']
 })
 export class AnimationComponent implements OnInit {
-  activeAnimations: string[] = [];
-  animations: string[] = ["spin", "pulse", "blur"];
+  @Input('visible') visible: boolean;
+  @Input('animObs') animObs: AnimationObj[];
+  @Input('activeAnimations') activeAnimations: string[];
   animationStrings: string[] = [];
 
-  spinAnim = "";
-  blurAnim = "";
-  pulseAnim = "";
-
-  spinObj = <AnimationObj>{ name: 'spin', timing: 'linear', duration: 7000, delay: 0 }
-  blurObj = <AnimationObj>{ name: 'blur', timing: 'linear', duration: 3000, delay: 0 }
-  pulseObj = <AnimationObj>{ name: 'pulse', timing: 'linear', duration: 4000, delay: 0 }
-  hueObj = <AnimationObj>{ name: 'hue', timing: 'linear', duration: 4000, delay: 0 }
-  // spinObj = <AnimationObj>{ name: 'spin', timing: 'linear', duration: 1000, delay: 0 }
-
-  animObs: AnimationObj[];
   easeOptions: string[] = ['linear', 'ease', 'easeinout', 'easein', 'easeout'];
 
   @Output() UpdateAnimation = new EventEmitter<string[]>();
+  @Output() UpdateActiveAnimation = new EventEmitter<string[]>();
 
   constructor() { }
 
-  ngOnInit(): void {
-    this.animObs = [];
-    this.animObs.push(this.spinObj);
-    this.animObs.push(this.blurObj);
-    this.animObs.push(this.pulseObj);
-    this.animObs.push(this.hueObj);
-  }
+  ngOnInit(): void { }
 
   addAnimation(anim: string) {
     if (this.activeAnimations.indexOf(anim) < 0) {
@@ -48,20 +33,14 @@ export class AnimationComponent implements OnInit {
   updateAnimation() {
     this.animationStrings = [];
     this.activeAnimations.forEach((anim) => {
-      if (anim == "spin") {
-        this.animationStrings.push(this.animObjToStr(this.spinObj));
-      }
-      if (anim == "blur") {
-        this.animationStrings.push(this.animObjToStr(this.blurObj));
-      }
-      if (anim == "pulse") {
-        this.animationStrings.push(this.animObjToStr(this.pulseObj));
-      }
-      if (anim == "hue") {
-        this.animationStrings.push(this.animObjToStr(this.hueObj));
-      }
+      this.animationStrings.push(this.animObjToStr(this.getAnimObjFromName(anim)));
     });
     this.UpdateAnimation.emit(this.animationStrings);
+    this.UpdateActiveAnimation.emit(this.activeAnimations);
+  }
+
+  getAnimObjFromName(name: string): AnimationObj {
+    return this.animObs.find(a => a.name == name);
   }
 
   animObjToStr(animObj: AnimationObj): string {

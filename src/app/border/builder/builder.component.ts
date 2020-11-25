@@ -1,5 +1,7 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AnimationObj } from 'src/app/models/animation.model';
 import { Midpoint } from 'src/app/models/midpoint.model';
+import { Stopper } from 'src/app/models/stopper.model';
 
 @Component({
   selector: 'app-builder',
@@ -7,14 +9,40 @@ import { Midpoint } from 'src/app/models/midpoint.model';
   styleUrls: ['./builder.component.scss']
 })
 export class BuilderComponent implements OnInit {
+  stopper: Stopper = <Stopper>{
+    points: [{
+      color: {
+        r: 50,
+        g: 50,
+        b: 50,
+        alpha: 1
+      },
+      offset: 10,
+      percentage: 10
+    }, {
+      color: {
+        r: 210,
+        g: 210,
+        b: 210,
+        alpha: 1
+      },
+      offset: 90,
+      percentage: 90
+    }]
+  }
+
   gradient: string = "";
   width = 1920;
   height = 1080;
   inWidth = 1920;
   inHeight = 1080;
+  curGradientStyle: string = "linear-gradient";
+
   radius = 0;
-  infoVisible = true;
   blur = 0;
+  opacity = 100;
+  angle = 90;
+
   spinAnim = "spin 7s linear infinite";
   blurAnim = "blur 2s linear infinite";
   waveAnim = "";
@@ -24,6 +52,21 @@ export class BuilderComponent implements OnInit {
 
   outerAnim = "";
   innerAnim = "";
+
+  prevImg = "";
+  imgSize = 95;
+  previewBg = "#ffffff";
+
+  editMode = "gradient";
+
+  spinObj = <AnimationObj>{ name: 'spin', timing: 'linear', duration: 7000, delay: 0 };
+  blurObj = <AnimationObj>{ name: 'blur', timing: 'linear', duration: 3000, delay: 0 };
+  pulseObj = <AnimationObj>{ name: 'pulse', timing: 'linear', duration: 4000, delay: 0 };
+  hueObj = <AnimationObj>{ name: 'hue', timing: 'linear', duration: 4000, delay: 0 };
+  animObs: AnimationObj[] = [this.spinObj, this.blurObj, this.pulseObj, this.hueObj];
+  activeAnimations: string[] = [];
+
+  previewVisible = true;
 
   @ViewChild("outerBorder", { static: false }) outerBorder: ElementRef;
   @ViewChild("circleCenter", { static: false }) circleCenter: HTMLElement;
@@ -35,11 +78,49 @@ export class BuilderComponent implements OnInit {
     this.calculateSize();
   }
 
+  changePrevColor(event) {
+    console.log(event);
+  }
+
   PreviewGradient(gradient) {
     this.calculateSize();
     this.gradient = gradient;
     this.generateUrl();
     this.cdr.detectChanges();
+  }
+
+  previewImage(event) {
+    const reader = new FileReader();
+    if (event.target.files && event.target.files.length) {
+      const [file] = event.target.files;
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.prevImg = reader.result as string;
+      };
+    }
+  }
+
+  updateStopper(event) {
+    this.stopper = event;
+    this.stopper.points.forEach(element => {
+      element.offset = element.percentage;
+    });
+  }
+
+  updateMidpoint(event) {
+    this.midpoint = event;
+  }
+
+  updateAngle(event) {
+    this.angle = event;
+  }
+
+  updateCurGradient(event) {
+    this.curGradientStyle = event;
+  }
+
+  togglePreview() {
+    this.previewVisible = !this.previewVisible;
   }
 
   PreviewAnim(anims: string[]) {
@@ -90,9 +171,6 @@ export class BuilderComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  hideInfo() {
-    this.infoVisible = false;
-  }
 
   generateUrl() {
     this.url = "http://daddycoolgaming.co.za/border?";
@@ -103,6 +181,7 @@ export class BuilderComponent implements OnInit {
       this.url += '&outerAnim=' + encodeURIComponent(this.outerAnim);
     this.url += '&radius=' + this.radius;
     this.url += '&blur=' + this.blur;
+    this.url += '&opacity=' + this.opacity / 100;
   }
 
   serialize(obj) {
@@ -115,7 +194,6 @@ export class BuilderComponent implements OnInit {
   }
 
   moveCenter(event) {
-
     let boundingRect = this.outerBorder.nativeElement.getBoundingClientRect();
     console.log(event);
     console.log(boundingRect);
@@ -123,8 +201,6 @@ export class BuilderComponent implements OnInit {
       x: Math.round((event.pointerPosition.x - boundingRect.left) / boundingRect.width * 100),
       y: Math.round((event.pointerPosition.y - boundingRect.top) / boundingRect.height * 100)
     };
-    console.log(this.midpoint);
-
   }
 
   copyToClipboard() {
@@ -157,5 +233,13 @@ export class BuilderComponent implements OnInit {
     }, function (err) {
       console.error('Async: Could not copy text: ', err);
     });
+  }
+
+  setEditMode(mode: string) {
+    this.editMode = mode;
+  }
+
+  updateActiveAnims(event) {
+    this.activeAnimations = event;
   }
 }

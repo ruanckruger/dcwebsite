@@ -2,12 +2,8 @@
   overflow: hidden;
   position: relative;
   display: inline-block;
-  // left: 50%;
-  // transform: translateX(-50%);
-  // padding: 21px;
-  box-shadow: 3px 3px 3px 0px rgba(0, 0, 0, 0.1);
 
-  .border {
+  .inner-border {
     width: 28vw;
     height: 28vh;
     position: absolute;
@@ -19,6 +15,10 @@
 
 #preview {
   text-align: center;
+
+  h3 {
+    margin-bottom: 21px;
+  }
 }
 
 .url {
@@ -36,7 +36,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 10;
+  z-index: 69;
   padding: 7px;
   cursor: grab;
 
@@ -54,6 +54,62 @@
   }
 }
 
+.preview-settings {
+  margin-top: 7px;
+}
+
+#preview-bg {
+  width: 105%;
+  height: 105%;
+  position: absolute;
+  background-color: green;
+  top: 49%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+}
+
+.hide-preview {
+  position: absolute;
+  top: 14px;
+  right: 21px;
+  width: 21px;
+  height: 21px;
+  z-index: 51;
+  cursor: pointer;
+  border-radius: 50%;
+  background-color: rgba(white, 0.3);
+
+  img {
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+  }
+}
+
+#preview-image {
+  width: 96%;
+  height: 96%;
+  position: absolute;
+  top: 49%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 50;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.preview-container {
+  position: relative;
+  display: inline-block;
+}
+
+.input-container {
+  cursor: pointer;
+}
 
 // .border-subtracter {
 //   background-color: black;
@@ -63,12 +119,60 @@
 //   mix-blend-mode: screen;
 // }
 
-.hidden {
-  display: none;
-}
-
 #url {
   border: none;
   width: 100%;
   border-bottom: solid 1px grey;
+  pointer-events: none;
+}
+
+#preview-fixed {
+  position: fixed;
+  top: 91px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 42vh;
+  z-index: 50;
+  padding-bottom: 14px;
+
+  @media only screen and (max-width: 767px) {
+    position: static;
+    height: unset;
+    transform: none;
+  }
+}
+
+#preview-spacer {
+  height: 45vh;
+
+  @media only screen and (max-width: 767px) {
+    position: fixed;
+    transform: none;
+  }
+}
+
+.url-lable {
+  cursor: pointer;
+}
+
+#mode-btn-container {
+  // background-color: white;
+  margin-top: 14px;
+  background-color: rgba(white, 0.3);
+}
+
+.btn {
+  transition: all 0.3s ease;
+}
+
+.active-mode {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+}
+
+.mode-btn {
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+  }
 }

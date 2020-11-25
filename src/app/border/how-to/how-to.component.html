@@ -1,0 +1,82 @@
+<ng-template #longContent
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Border Generator How-To</h4>
+    <button type="button"
+            class="close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click');hideInfo()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div id="how-to-use">
+      <h2 class="text-center">How to use the Border Builder</h2>
+      <div class="how-to-section">
+        <h4>Preview Settings</h4>
+        <h5>This section is used strictly for the preview of the border.</h5>
+        <p><b>Width &amp; Height:</b> The size of the preview window, scaled down to fit the page. This should be the
+          width of whatever you would like to put the border behind.</p>
+        <p><b>Preview image:</b> Upload an image of the scene you're going to put a border around to see how it looks!
+        </p>
+        <p><b>Image Size:</b> Only visible if you've uploaded an image. USe this to get an idea of how the border will
+          look with different "thickness".</p>
+        <p><b>Background color:</b> Change this to get a better idea of how the border will look on top of other scenes.
+        </p>
+      </div>
+      <div class="how-to-section">
+        <h4>Static Settings</h4>
+        <h5>This section is the first part of your border's customization.</h5>
+        <p><b>Border Radius:</b> Set the roundness of the corners of the border.</p>
+        <p><b>Blur:</b> Give your border a nice blurry effect.</p>
+        <p><b>Opacity: </b> Set the transparency of the border.</p>
+      </div>
+      <div class="how-to-section">
+        <h4>Gradient Settings</h4>
+        <h5>The core of your borders look and feel</h5>
+        <p><b>Gradient slider:</b> Click on the slider to add a new point or select an existing point and drag it to get
+          your desired gradient. With a point selected, use the color picker to set the color of that point!</p>
+        <p><b>Color picker:</b> Set the color of the current point, don't forget to adjust opacity for some really
+          awesome borders that loop around the frame with the spin animation. There are pre-defined colors you can
+          access by click the square on the bottom left.</p>
+        <p><b>Gradient type:</b> Select between the various gradient types.</p>
+        <p><b>Angle picker:</b> Choose the angle of the linear or conic gradient</p>
+        <p><b>Circle center point:</b> When the radial or conic gradient is selected, you can drag the center point of
+          the circle on the preview window.</p>
+      </div>
+      <div class="how-to-section">
+        <h4>Animation Settings</h4>
+        <h5>Bring your border to life!</h5>
+        <p><b>Spin: </b> Probably the best animation to add, spins your gradient around the center point.</p>
+        <p><b>Blur: </b> Slightly blurs and unblurs the border. *note: this will override the static blur.</p>
+        <p><b>Pulse: </b> Shrinks and increases the border. *note: The shrink is relative to the canvas size.</p>
+        <p><b>Hue: </b> Colorizes! *note: Only works on colors that aren't Blacks, whites or greys.</p>
+      </div>
+      <div class="how-to-section">
+        <h4>Cool, so what's next?</h4>
+        <h5>You've made the perfect border! Now what?</h5>
+        <p><b>Add to OBS</b> When you're done, simply click the text that says click to copy to get the url to paste as
+          a browser source url
+          in obs! I recommend setting the width and height in obs's browser source settings to the same as the values
+          you set up under the static settings section. That's it, you're done!</p>
+        <p><b>Play some more!</b> I encourage you to play around with all the settings to get a really unique look. I
+          really hope this helped and GL HF with your streams good person!</p>
+        <p><b>Flex!</b> If you're really proud of the border you've made, join my discord and paste the link in the
+          'border-builder-flex-your-border' channel and I'll rate it!</p>
+        <p><b>Last words!</b> This isn't strictly for webcam purposes, the border can be added to any scene your heart
+          desires. More functionality will be coming soon. Join <a href="https://discord.gg/mftyksJ"
+             target="_blank">my discord</a> for any questions or to leave some feedback or suggestions!</p>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-light"
+            (click)="modal.close('Close click');hideInfo()">Close</button>
+  </div>
+</ng-template>
+<div class="container">
+  <button *ngIf="!infoVisible"
+          (click)="showInfo(longContent)"
+          class="btn btn-info help-btn">Show help</button>
+</div>
