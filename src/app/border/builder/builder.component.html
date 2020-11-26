@@ -51,6 +51,24 @@
                  'height': inHeight/4+'px' }">
             </div>
           </div>
+          <div #bgEffects
+               id="bg-effects"
+               class="background-effects"
+               [style]="{'border-radius':radius+'px',
+                'opacity': opacity/100,
+                'filter':distort? 'url(#wavy) blur('+bgBlur+'px)':'blur('+bgBlur+'px)' ,
+                'animation': outerAnim,
+                'width':  width/4+'px',        
+                'height': height/4+'px',
+                'transform':'scale('+bgScale+') translate(-'+bgDistort/3+'px,-'+bgDistort/4+'px)'}">
+
+            <div class="inner-border"
+                 [style]="{ 'background': gradient,
+                 'animation': innerAnim,
+                 'width':  inWidth/4+'px',        
+                 'height': inHeight/4+'px' }">
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -74,17 +92,20 @@
   <div id="mode-btn-container"
        class="row">
     <button [class.active-mode]="editMode == 'preview'"
-            class="btn col-md-3 mode-btn"
+            class="btn col mode-btn"
             (click)="setEditMode('preview')">Preview Settings</button>
     <button [class.active-mode]="editMode == 'static'"
-            class="btn col-md-3 mode-btn"
+            class="btn col mode-btn"
             (click)="setEditMode('static')">Static Settings</button>
     <button [class.active-mode]="editMode == 'gradient'"
-            class="btn col-md-3 mode-btn"
+            class="btn col mode-btn"
             (click)="setEditMode('gradient')">Gradient Settings</button>
     <button [class.active-mode]="editMode == 'animation'"
-            class="btn col-md-3 mode-btn"
-            (click)="setEditMode('animation')">Animation Settings</button>
+            class="btn col mode-btn"
+            (click)="setEditMode('animation')">Animation Settings</button><button
+            [class.active-mode]="editMode == 'animation'"
+            class="btn col mode-btn"
+            (click)="setEditMode('background')">Background Settings</button>
   </div>
 </div>
 <div id="preview-spacer"></div>
@@ -201,4 +222,57 @@
       </div>
     </div>
   </ng-container>
+  <ng-container *ngIf="editMode=='background'">
+    <div class="container">
+      <div class="background">
+        <div class="row">
+          <div class="form-group col-6">
+            <label for="">Background Blur</label>
+            <input type="number"
+                   class="form-control"
+                   name="bgbluref"
+                   id="bgbluref"
+                   min="0"
+                   [(ngModel)]="bgBlur">
+          </div>
+          <div class="form-group col-6">
+            <label for="">Background Distort</label>
+            <input type="number"
+                   class="form-control"
+                   name="bgDistort"
+                   id="bgDistort"
+                   min="0"
+                   [(ngModel)]="bgDistort">
+          </div>
+          <div class="form-group col-6">
+            <label for="">Background Scale</label>
+            <input type="number"
+                   class="form-control"
+                   name="bgDistort"
+                   id="bgDistort"
+                   min="0"
+                   step="0.02"
+                   [(ngModel)]="bgScale">
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+<div id="filters">
+  <svg>
+    <filter id="wavy">
+      <feTurbulence baseFrequency="0.003,0.016"
+                    numOctaves="1"
+                    seed="524"
+                    type="turbulence">
+        <animate attributeName="baseFrequency"
+                 dur="30s"
+                 values="0.02;0.05;0.02"
+                 repeatCount="indefinite"></animate>
+      </feTurbulence>
+      <feDisplacementMap in="SourceGraphic"
+                         [attr.scale]="bgDistort"></feDisplacementMap>
+    </filter>
+  </svg>
 </div>

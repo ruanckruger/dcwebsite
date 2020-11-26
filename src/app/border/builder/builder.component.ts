@@ -42,6 +42,10 @@ export class BuilderComponent implements OnInit {
   blur = 0;
   opacity = 100;
   angle = 90;
+  bgBlur = 0;
+  bgDistort = 0;
+  bgScale = 1;
+  distort = true;
 
   spinAnim = "spin 7s linear infinite";
   blurAnim = "blur 2s linear infinite";
