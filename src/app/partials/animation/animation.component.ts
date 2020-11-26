@@ -12,7 +12,7 @@ export class AnimationComponent implements OnInit {
   @Input('activeAnimations') activeAnimations: string[];
   animationStrings: string[] = [];
 
-  easeOptions: string[] = ['linear', 'ease', 'easeinout', 'easein', 'easeout'];
+  easeOptions: string[] = ['linear', 'ease', 'ease-in-out', 'ease-in', 'ease-out'];
 
   @Output() UpdateAnimation = new EventEmitter<string[]>();
   @Output() UpdateActiveAnimation = new EventEmitter<string[]>();
