@@ -44,7 +44,7 @@ export class AnimationComponent implements OnInit {
   }
 
   animObjToStr(animObj: AnimationObj): string {
-    return `${animObj.name} ${animObj.duration}ms ${animObj.delay}ms ${animObj.timing} infinite`
+    return `${animObj.name} ${animObj.duration}ms 0ms ${animObj.timing} infinite`
   }
 
   trimString(inString: string): string {
