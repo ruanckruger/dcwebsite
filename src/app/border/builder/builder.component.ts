@@ -59,10 +59,10 @@ export class BuilderComponent implements OnInit {
 
   editMode = "gradient";
 
-  spinObj = <AnimationObj>{ name: 'spin', timing: 'linear', duration: 7000, delay: 0 };
-  blurObj = <AnimationObj>{ name: 'blur', timing: 'linear', duration: 3000, delay: 0 };
-  pulseObj = <AnimationObj>{ name: 'pulse', timing: 'linear', duration: 4000, delay: 0 };
-  hueObj = <AnimationObj>{ name: 'hue', timing: 'linear', duration: 4000, delay: 0 };
+  spinObj = <AnimationObj>{ name: 'spin', timing: 'linear', duration: 7000 };
+  blurObj = <AnimationObj>{ name: 'blur', timing: 'linear', duration: 3000 };
+  pulseObj = <AnimationObj>{ name: 'pulse', timing: 'linear', duration: 4000 };
+  hueObj = <AnimationObj>{ name: 'hue', timing: 'linear', duration: 4000 };
   animObs: AnimationObj[] = [this.spinObj, this.blurObj, this.pulseObj, this.hueObj];
   activeAnimations: string[] = [];
 
