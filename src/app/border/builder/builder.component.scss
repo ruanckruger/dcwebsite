@@ -2,6 +2,7 @@
   overflow: hidden;
   position: relative;
   display: inline-block;
+  z-index: 5;
 
   .inner-border {
     width: 28vw;
@@ -174,5 +175,29 @@
   &:hover {
     background-color: rgba(0, 0, 0, 0.3);
     color: white;
+  }
+}
+
+svg {
+  width: 0;
+  height: 0;
+}
+
+#bg-effects {
+  overflow: hidden;
+  display: inline-block;
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  left: 0;
+  filter: blur(11px) url('#wavy');
+
+  .inner-border {
+    width: 28vw;
+    height: 28vh;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 }
